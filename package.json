@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "db:push": "prisma db push",
     "dev:api": "nodemon --exec \"node --loader ts-node/esm\" src/api/index.ts",
     "dev:notifications": "nodemon --exec \"node --loader ts-node/esm\" src/notifications/worker.ts",
     "start:api": "node dist/src/api/index.js",
