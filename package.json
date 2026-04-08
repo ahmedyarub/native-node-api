@@ -3,9 +3,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev:api": "nodemon --exec 'node --loader ts-node/esm' src/api/index.ts",
-    "dev:notifications": "nodemon --exec 'node --loader ts-node/esm' src/notifications/worker.ts",
-    "start:api": "node dist/api/index.js",
+    "dev:api": "nodemon --exec \"node --loader ts-node/esm\" src/api/index.ts",
+    "dev:notifications": "nodemon --exec \"node --loader ts-node/esm\" src/notifications/worker.ts",
+    "start:api": "node dist/src/api/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "devDependencies": {

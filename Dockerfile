@@ -23,4 +23,4 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 # Prisma needs generated client
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-CMD ["node", "dist/api/index.js"]
+CMD ["node", "dist/src/api/index.js"]

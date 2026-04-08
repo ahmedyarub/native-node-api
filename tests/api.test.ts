@@ -49,8 +49,8 @@ describe('REST API Endpoints', () => {
   });
 
   it('GET /api/users should return empty users list if DB is empty', async () => {
-    mockFindMany.mockResolvedValue([]);
-    mockGet.mockResolvedValue(null); // No cache
+    mockFindMany.mockResolvedValue([] as never);
+    mockGet.mockResolvedValue(null as never); // No cache
 
     const res = await request(app).get('/api/users');
     expect(res.statusCode).toEqual(200);
@@ -59,7 +59,7 @@ describe('REST API Endpoints', () => {
 
   it('POST /api/users should create a user', async () => {
     const mockUser = { id: 1, email: 'test@test.com', name: 'Test' };
-    mockCreate.mockResolvedValue(mockUser);
+    mockCreate.mockResolvedValue(mockUser as never);
 
     const res = await request(app)
       .post('/api/users')
