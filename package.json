@@ -9,6 +9,9 @@
     "start:api": "node dist/src/api/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
+  },
   "devDependencies": {
     "@types/amqplib": "^0.10.8",
     "@types/cors": "^2.8.19",
