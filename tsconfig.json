@@ -1,9 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es2024",
-    "module": "esnext",
-    // Add the line below
-    "types": ["node"],
-    "strict": true
-  }
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src/**/*", "tests/**/*", "prisma/**/*"],
+  "types": ["jest", "node"],
+  "moduleResolution": "node"
 }
