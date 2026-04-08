@@ -1,0 +1,13 @@
+{
+  "name": "native-node-api",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env server.ts",
+    "dev": "node --watch --env-file=.env server.ts",
+    "test": "node --test --experimental-test-coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "typescript": "^6.0.2"
+  }
+}

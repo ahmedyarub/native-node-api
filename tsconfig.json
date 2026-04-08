@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "es2024",
+    "module": "esnext",
+    // Add the line below
+    "types": ["node"],
+    "strict": true
+  }
+}
