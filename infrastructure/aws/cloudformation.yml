@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation template for Native Node API infrastructure'
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: node-api-vpc
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: NativeNodeAPICluster
+
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  APITaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: node-api-task
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: api
+          Image: <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/node-api:latest
+          PortMappings:
+            - ContainerPort: 3000
+          Environment:
+            - Name: NODE_ENV
+              Value: production
+            - Name: PORT
+              Value: 3000
+            - Name: DATABASE_URL
+              Value: !Sub 'postgresql://${DBUser}:${DBPassword}@${AuroraDBCluster.Endpoint.Address}:5432/appdb'
+            - Name: REDIS_URL
+              Value: !Sub 'redis://${RedisCluster.RedisEndpoint.Address}:${RedisCluster.RedisEndpoint.Port}'
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: /ecs/node-api
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  AuroraDBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      DatabaseName: appdb
+      MasterUsername: user
+      MasterUserPassword: "{{resolve:secretsmanager:AuroraDBPassword:SecretString:password}}"
+      BackupRetentionPeriod: 7
+
+  RedisCluster:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: redis
+      CacheNodeType: cache.t3.micro
+      NumCacheNodes: 1
+
+Outputs:
+  ClusterName:
+    Value: !Ref ECSCluster
+  AuroraEndpoint:
+    Value: !GetAtt AuroraDBCluster.Endpoint.Address
